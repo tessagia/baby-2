@@ -1,0 +1,88 @@
+import { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { motion } from "framer-motion";
+
+export default function Marketplace() {
+  const [products, setProducts] = useState([
+    { id: 1, name: "iPhone 12", price: "€500", image: "/iphone12.jpg" },
+    { id: 2, name: "MacBook Pro", price: "€1200", image: "/macbook.jpg" },
+    { id: 3, name: "PlayStation 5", price: "€450", image: "/ps5.jpg" },
+  ]);
+  const [user, setUser] = useState(null);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isVerified, setIsVerified] = useState(false);
+
+  const handleLogin = () => {
+    setUser({ name: "Mario Rossi" });
+  };
+
+  const handleRegister = () => {
+    setEmailSent(true);
+  };
+
+  const handleVerifyCode = () => {
+    if (verificationCode === "123456") {
+      setIsVerified(true);
+      setUser({ name: "Nuovo Utente" });
+    }
+  };
+
+  const handleResendCode = () => {
+    setEmailSent(true);
+    setVerificationCode("");
+  };
+
+  return (
+    <div className="p-6 max-w-4xl mx-auto">
+      {!user ? (
+        <div className="mb-4">
+          <h2 className="text-xl font-bold">{isRegistering ? "Registrati" : "Accedi"} per vendere i tuoi prodotti</h2>
+          {isRegistering ? (
+            <>
+              <Input placeholder="Nome" className="mb-2" />
+              <Input placeholder="Email" className="mb-2" />
+              <Input placeholder="Password" type="password" className="mb-2" />
+              <Button onClick={handleRegister} className="mt-2">Registrati</Button>
+              {emailSent && (
+                <div className="mt-4">
+                  <p className="text-green-500">Email di conferma inviata! Inserisci il codice ricevuto:</p>
+                  <Input placeholder="Codice di verifica" className="mb-2" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
+                  <Button onClick={handleVerifyCode} className="mt-2">Verifica</Button>
+                  <Button onClick={handleResendCode} className="mt-2 ml-2">Reinvia Codice</Button>
+                </div>
+              )}
+              <p className="mt-2 text-sm">Hai già un account? <span className="text-blue-500 cursor-pointer" onClick={() => setIsRegistering(false)}>Accedi</span></p>
+            </>
+          ) : (
+            <>
+              <Button onClick={handleLogin} className="mt-2">Login</Button>
+              <p className="mt-2 text-sm">Non hai un account? <span className="text-blue-500 cursor-pointer" onClick={() => setIsRegistering(true)}>Registrati</span></p>
+            </>
+          )}
+        </div>
+      ) : (
+        <h2 className="text-xl font-bold mb-4">Benvenuto, {user.name}!</h2>
+      )}
+      <h1 className="text-2xl font-bold mb-4">Marketplace di Prodotti Usati</h1>
+      <Input placeholder="Cerca prodotti..." className="mb-4" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {products.map((product) => (
+          <motion.div key={product.id} whileHover={{ scale: 1.05 }}>
+            <Card className="overflow-hidden">
+              <img src={product.image} alt={product.name} className="w-full h-48 object-cover" />
+              <CardContent className="p-4">
+                <h2 className="text-lg font-semibold">{product.name}</h2>
+                <p className="text-gray-600">{product.price}</p>
+                <Button className="mt-2 w-full">Compra ora</Button>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+}
