@@ -1,8 +1,4 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { motion } from "framer-motion";
 
 export default function Marketplace() {
   const [products, setProducts] = useState([
@@ -10,7 +6,7 @@ export default function Marketplace() {
     { id: 2, name: "MacBook Pro", price: "€1200", image: "/macbook.jpg" },
     { id: 3, name: "PlayStation 5", price: "€450", image: "/ps5.jpg" },
   ]);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<{ name: string } | null>(null);
   const [isRegistering, setIsRegistering] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
   const [verificationCode, setVerificationCode] = useState("");
@@ -43,23 +39,23 @@ export default function Marketplace() {
           <h2 className="text-xl font-bold">{isRegistering ? "Registrati" : "Accedi"} per vendere i tuoi prodotti</h2>
           {isRegistering ? (
             <>
-              <Input placeholder="Nome" className="mb-2" />
-              <Input placeholder="Email" className="mb-2" />
-              <Input placeholder="Password" type="password" className="mb-2" />
-              <Button onClick={handleRegister} className="mt-2">Registrati</Button>
+              <input placeholder="Nome" className="mb-2 border p-2 rounded w-full" />
+              <input placeholder="Email" className="mb-2 border p-2 rounded w-full" />
+              <input placeholder="Password" type="password" className="mb-2 border p-2 rounded w-full" />
+              <button onClick={handleRegister} className="mt-2 bg-blue-500 text-white p-2 rounded">Registrati</button>
               {emailSent && (
                 <div className="mt-4">
                   <p className="text-green-500">Email di conferma inviata! Inserisci il codice ricevuto:</p>
-                  <Input placeholder="Codice di verifica" className="mb-2" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
-                  <Button onClick={handleVerifyCode} className="mt-2">Verifica</Button>
-                  <Button onClick={handleResendCode} className="mt-2 ml-2">Reinvia Codice</Button>
+                  <input placeholder="Codice di verifica" className="mb-2 border p-2 rounded w-full" value={verificationCode} onChange={(e) => setVerificationCode(e.target.value)} />
+                  <button onClick={handleVerifyCode} className="mt-2 bg-blue-500 text-white p-2 rounded">Verifica</button>
+                  <button onClick={handleResendCode} className="mt-2 ml-2 bg-gray-500 text-white p-2 rounded">Reinvia Codice</button>
                 </div>
               )}
               <p className="mt-2 text-sm">Hai già un account? <span className="text-blue-500 cursor-pointer" onClick={() => setIsRegistering(false)}>Accedi</span></p>
             </>
           ) : (
             <>
-              <Button onClick={handleLogin} className="mt-2">Login</Button>
+              <button onClick={handleLogin} className="mt-2 bg-blue-500 text-white p-2 rounded">Login</button>
               <p className="mt-2 text-sm">Non hai un account? <span className="text-blue-500 cursor-pointer" onClick={() => setIsRegistering(true)}>Registrati</span></p>
             </>
           )}
@@ -68,21 +64,21 @@ export default function Marketplace() {
         <h2 className="text-xl font-bold mb-4">Benvenuto, {user.name}!</h2>
       )}
       <h1 className="text-2xl font-bold mb-4">Marketplace di Prodotti Usati</h1>
-      <Input placeholder="Cerca prodotti..." className="mb-4" />
+      <input placeholder="Cerca prodotti..." className="mb-4 border p-2 rounded w-full" />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {products.map((product) => (
-          <motion.div key={product.id} whileHover={{ scale: 1.05 }}>
-            <Card className="overflow-hidden">
-              <img src={product.image} alt={product.name} className="w-full h-48 object-cover" />
-              <CardContent className="p-4">
-                <h2 className="text-lg font-semibold">{product.name}</h2>
-                <p className="text-gray-600">{product.price}</p>
-                <Button className="mt-2 w-full">Compra ora</Button>
-              </CardContent>
-            </Card>
-          </motion.div>
+          <div key={product.id} className="border p-4 rounded-lg shadow-lg overflow-hidden">
+            <img src={product.image} alt={product.name} className="w-full h-48 object-cover" />
+            <div className="p-4">
+              <h2 className="text-lg font-semibold">{product.name}</h2>
+              <p className="text-gray-600">{product.price}</p>
+              <button className="mt-2 w-full bg-blue-500 text-white p-2 rounded">Compra ora</button>
+            </div>
+          </div>
         ))}
       </div>
     </div>
   );
+
 }
+
